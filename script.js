@@ -2,7 +2,13 @@
 const addButton = document.getElementById("add-button");
 const taskList = document.getElementById("task-list");
 const input = document.getElementById("task-input");
+const remain = document.getElementById("remaining-count")
+let count = 0;
 
+
+function upDateCount(){
+    remain.textContent = count;
+}
 
 function addTask() {
     const taskName = input.value.trim();
@@ -12,6 +18,9 @@ function addTask() {
         const deleteButton = document.createElement("button");
         const taskText = document.createElement("span");
         const check = document.createElement("input");
+
+        count++;
+        upDateCount()
         //タイプ
         check.type = "checkbox";
         //リストに追加
@@ -23,19 +32,29 @@ function addTask() {
         //削除の子要素
         deleteButton.textContent = "削除";
         newTask.appendChild(deleteButton);
-        //削除の機能()
+        //削除の機能(確認付き)
+
         deleteButton.addEventListener("click", function () {
-            newTask.remove();
+            if (confirm("本当に削除しますか")) {
+                if (!check.checked) {
+                    count--;
+                    upDateCount()
+                }
+                newTask.remove();
+            }
         });
         //チェックの子要素
         //チェックの機能
         check.addEventListener("change", function () {
             if (check.checked) {
+                count--;
                 taskText.style.textDecoration = "line-through";
             }
             else {
+                count++;
                 taskText.style.textDecoration = "none";
             }
+            upDateCount()
         });
 
         input.value = "";
@@ -46,9 +65,8 @@ addButton.addEventListener("click", function () {
     addTask();
 });
 
-input.addEventListener("keydown", function(event){
-    if(event.key === "Enter")
-{
-    addTask();
-}
+input.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+        addTask();
+    }
 });
